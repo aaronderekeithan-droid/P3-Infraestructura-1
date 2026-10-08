@@ -1,0 +1,401 @@
+FortiGate-VM64-KVM # show system interface
+config system interface
+    edit "port1"
+        set vdom "root"
+        set mode dhcp
+        set allowaccess ping https ssh http
+        set type physical
+        set lldp-reception enable
+        set role wan
+        set snmp-index 1
+    next
+    edit "port2"
+        set vdom "root"
+        set type physical
+        set device-identification enable
+        set lldp-transmission enable
+        set role lan
+        set snmp-index 2
+    next
+    edit "port3"
+        set vdom "root"
+        set ip 10.8.27.1 255.255.255.240
+        set allowaccess ping
+        set type physical
+        set role dmz
+        set snmp-index 3
+    next
+    edit "port4"
+        set vdom "root"
+        set type physical
+        set snmp-index 4
+    next
+    edit "ssl.root"
+        set vdom "root"
+        set type tunnel
+        set alias "SSL VPN interface"
+        set snmp-index 6
+    next
+    edit "fortilink"
+        set vdom "root"
+        set fortilink enable
+        set ip 169.254.1.1 255.255.255.0
+        set allowaccess ping fabric
+        set type aggregate
+        set lldp-reception enable
+        set lldp-transmission enable
+        set snmp-index 7
+    next
+    edit "VLAN10"
+        set vdom "root"
+        set ip 10.8.25.1 255.255.255.128
+        set allowaccess ping
+        set device-identification enable
+        set role lan
+        set snmp-index 5
+        set interface "port2"
+        set vlanid 10
+    next
+    edit "VLAN20"
+        set vdom "root"
+        set ip 10.8.26.1 255.255.255.128
+        set device-identification enable
+        set role lan
+        set snmp-index 8
+        set interface "port2"
+        set vlanid 20
+    next
+end
+
+FortiGate-VM64-KVM # show system dhcp server
+config system dhcp server
+    edit 1
+        set ntp-service local
+        set default-gateway 169.254.1.1
+        set netmask 255.255.255.0
+        set interface "fortilink"
+        config ip-range
+            edit 1
+                set start-ip 169.254.1.2
+                set end-ip 169.254.1.254
+            next
+        end
+        set vci-match enable
+        set vci-string "FortiSwitch" "FortiExtender"
+    next
+    edit 2
+        set dns-service default
+        set default-gateway 10.8.25.1
+        set netmask 255.255.255.128
+        set interface "VLAN10"
+        config ip-range
+            edit 1
+                set start-ip 10.8.25.10
+                set end-ip 10.8.25.120
+            next
+        end
+    next
+    edit 3
+        set dns-service default
+        set default-gateway 10.8.26.1
+        set netmask 255.255.255.128
+        set interface "VLAN20"
+        config ip-range
+            edit 1
+                set start-ip 10.8.26.10
+                set end-ip 10.8.26.120
+            next
+        end
+    next
+end
+
+FortiGate-VM64-KVM # show system dns
+config system dns
+    set primary 8.8.8.8
+    set secondary 1.1.1.1
+end
+
+FortiGate-VM64-KVM # show firewall address
+config firewall address
+    edit "none"
+        set uuid b8d000c0-c106-51f1-5229-73325a9f02c7
+        set subnet 0.0.0.0 255.255.255.255
+    next
+    edit "login.microsoftonline.com"
+        set uuid b8d18760-c106-51f1-0716-e5445ba3b824
+        set type fqdn
+        set fqdn "login.microsoftonline.com"
+    next
+    edit "login.microsoft.com"
+        set uuid b8d18761-c106-51f1-fafa-6addedf048ed
+        set type fqdn
+        set fqdn "login.microsoft.com"
+    next
+    edit "login.windows.net"
+        set uuid b8d18762-c106-51f1-622a-897b2deb02de
+        set type fqdn
+        set fqdn "login.windows.net"
+    next
+    edit "gmail.com"
+        set uuid b8d18763-c106-51f1-dda0-075f2c11e287
+        set type fqdn
+        set fqdn "gmail.com"
+    next 
+    edit "wildcard.google.com"
+        set uuid b8d30e00-c106-51f1-213f-36a343ab23fd
+        set type fqdn
+        set fqdn "*.google.com"
+    next
+    edit "wildcard.dropbox.com"
+        set uuid b8d30e01-c106-51f1-9920-6fdfb23daa2d
+        set type fqdn
+        set fqdn "*.dropbox.com"
+    next
+    edit "all"
+        set uuid b92573c0-c106-51f1-ac1a-e0cd54754aaa
+    next
+    edit "FIREWALL_AUTH_PORTAL_ADDRESS"
+        set uuid b92573c1-c106-51f1-44e1-eab82d5522e0
+    next
+    edit "FABRIC_DEVICE"
+        set uuid b92573c2-c106-51f1-673e-ff7f90e7b063
+        set comment "IPv4 addresses of Fabric Devices."
+    next
+    edit "SSLVPN_TUNNEL_ADDR1"
+        set uuid b9302220-c106-51f1-e4b1-1c1013cfcdab
+        set type iprange
+        set associated-interface "ssl.root"
+        set start-ip 10.212.134.200
+        set end-ip 10.212.134.210
+    next
+    edit "VLAN10 address"
+        set uuid 42c14016-c317-51f1-c23d-3f5eebfc57ca
+        set type interface-subnet
+        set subnet 10.8.25.1 255.255.255.128
+        set interface "VLAN10"
+    next
+    edit "VLAN20 address"
+        set uuid 72b36b96-c317-51f1-09fa-87f7bb3c0410
+        set type interface-subnet
+        set subnet 10.8.26.1 255.255.255.128
+        set interface "VLAN20"
+    next
+    edit "UPD-archive"
+        set uuid e257a196-c318-51f1-0573-5856bda563f8
+        set type fqdn
+        set fqdn "archive.ubuntu.com"
+    next
+    edit "UPD-security"
+        set uuid ef222ad6-c318-51f1-15d4-4311dc17a7bd
+        set type fqdn
+        set fqdn "security.ubuntu.com"
+    next
+    edit "DNS-Google"
+        set uuid f67a0cd6-c318-51f1-7c91-60334f1ab693
+        set subnet 8.8.8.8 255.255.255.255
+    next
+    edit "Web-Caja"
+        set uuid fdc2ac96-c318-51f1-311a-35c0209c68d2
+        set subnet 10.8.27.2 255.255.255.255
+    next
+    edit "Web-Inventario"
+        set uuid 0401cb96-c319-51f1-8b4e-b1cc2e38b340
+        set subnet 10.8.27.3 255.255.255.255
+    next
+    edit "DB-Server"
+        set uuid 0bb0a736-c319-51f1-c228-17055fc36904
+        set subnet 10.8.27.4 255.255.255.255
+    next
+end
+
+FortiGate-VM64-KVM # show webfilter profile Bloqueo-Inventario
+config webfilter profile
+    edit "Bloqueo-Inventario"
+        config web
+            set urlfilter-table 1
+        end
+        config ftgd-wf
+            config filters
+                edit 12
+                    set category 12
+                    set action warning
+                next
+                edit 2
+                    set category 2
+                    set action warning
+                next
+                edit 7
+                    set category 7
+                    set action warning
+                next
+                edit 8
+                    set category 8
+                    set action warning
+                next
+                edit 9
+                    set category 9
+                    set action warning
+                next
+                edit 11
+                    set category 11
+                    set action warning
+                next
+                edit 13
+                    set category 13
+                    set action warning
+                next
+                edit 14
+                    set category 14
+                    set action warning
+                next
+                edit 15
+                    set category 15
+                    set action warning
+                next
+                edit 16
+                    set category 16
+                    set action warning
+                next
+                edit 57
+                    set category 57
+                    set action warning
+                next
+                edit 63
+                    set category 63
+                    set action warning
+                next
+                edit 64
+                    set category 64
+                    set action warning
+                next
+                edit 65
+                    set category 65
+                    set action warning
+                next
+                edit 66
+                    set category 66
+                    set action warning
+                next
+                edit 67
+                    set category 67
+                    set action warning
+                next
+                edit 26
+                    set category 26
+                    set action block
+                next
+                edit 61
+                    set category 61
+                    set action block
+                next
+                edit 86
+                    set category 86
+                    set action block
+                next
+                edit 88
+                    set category 88
+                    set action block
+                next
+                edit 90
+                    set category 90
+                    set action block
+                next
+                edit 91
+                    set category 91
+                    set action block
+                next
+                edit 23
+                    set action warning
+                next
+            end
+        end
+    next
+end
+
+FortiGate-VM64-KVM # show firewall policy
+config firewall policy
+    edit 1
+        set name "LAN-a-Internet"
+        set uuid b781a376-c319-51f1-236e-a398b163b73a
+        set srcintf "VLAN10" "VLAN20"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set action accept
+        set schedule "always"
+        set service "ALL"
+        set nat enable
+    next
+    edit 2
+        set name "VLAN10-a-Web"
+        set uuid d6ac7596-c319-51f1-cb9f-90bd15563a51
+        set srcintf "VLAN10"
+        set dstintf "port3"
+        set srcaddr "all"
+        set dstaddr "Web-Caja" "Web-Inventario"
+        set action accept
+        set schedule "always"
+        set service "HTTP"
+        set utm-status enable
+        set webfilter-profile "Bloqueo-Inventario"
+        set logtraffic all
+    next
+    edit 3
+        set name "VLAN20-SSH-DMZ"
+        set uuid f658fad6-c319-51f1-e166-aba6987c7730
+        set srcintf "VLAN20"
+        set dstintf "port3"
+        set srcaddr "all"
+        set dstaddr "DB-Server" "Web-Caja" "Web-Inventario"
+        set action accept
+        set schedule "always"
+        set service "SSH"
+        set logtraffic all
+    next
+    edit 4
+        set name "DMZ-Updates"
+        set uuid 0d533e36-c31a-51f1-e373-48db10e6c5eb
+        set srcintf "port3"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "UPD-archive" "UPD-security"
+        set action accept
+        set schedule "always"
+        set service "HTTP" "HTTPS"
+        set nat enable
+    next
+    edit 5
+        set name "DMZ-DNS"
+        set uuid 1f28ac36-c31a-51f1-31a9-2689e97ad9d5
+        set srcintf "port3"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "DNS-Google"
+        set action accept
+        set schedule "always"
+        set service "DNS"
+        set nat enable
+    next
+    edit 6
+        set name "DMZ-a-LAN-DENY"
+        set uuid 358bdfb6-c31a-51f1-502b-8dfbdd21cc8b
+        set srcintf "port3"
+        set dstintf "VLAN10" "VLAN20"
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+    edit 7
+        set name "DMZ-a-Internet-DENY"
+        set uuid 465f6e16-c31a-51f1-81a8-2110814168c7
+        set srcintf "port3"
+        set dstintf "port1"
+        set srcaddr "all"
+        set dstaddr "all"
+        set schedule "always"
+        set service "ALL"
+        set logtraffic all
+    next
+end
