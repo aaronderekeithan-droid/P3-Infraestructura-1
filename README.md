@@ -20,7 +20,7 @@
 ## Video demostrativo
 
 <!-- 👉 PEGA AQUÍ EL ENLACE DE YOUTUBE / ONEDRIVE -->
-**▶ [Ver el video demostrativo](ENLACE_DEL_VIDEO)** · Duración máxima: 10 minutos · Incluye fecha y hora, rostro y voz del autor.
+**▶ [Ver el video demostrativo](https://youtu.be/vItrktH81vk)** · Duración máxima: 10 minutos · Incluye fecha y hora, rostro y voz del autor.
 
 ---
 
